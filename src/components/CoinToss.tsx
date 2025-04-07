@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { useCricket } from '@/context/CricketContext';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Crown, ChevronsRight, Trophy } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { AppStep } from '@/types';
 
 const CoinToss: React.FC = () => {
   const { teamAlpha, teamBeta, performToss, tossResult, tossWinningTeam, setStep } = useCricket();
@@ -42,7 +42,7 @@ const CoinToss: React.FC = () => {
       return;
     }
 
-    setStep('result');
+    setStep(AppStep.RESULT);
   };
 
   return (

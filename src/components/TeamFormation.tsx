@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import PlayerCard from './PlayerCard';
 import { Flag, Users2, ShieldAlert } from 'lucide-react';
+import { AppStep } from '@/types';
 
 const TeamFormation: React.FC = () => {
   const { 
@@ -19,7 +20,7 @@ const TeamFormation: React.FC = () => {
 
   const handleTeamFormationComplete = () => {
     setIsTeamFormationComplete(true);
-    setStep('select_captains');
+    setStep(AppStep.SELECT_CAPTAINS);
   };
 
   const areTeamsValid = () => {

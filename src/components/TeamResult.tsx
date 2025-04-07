@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from 'react';
 import { useCricket } from '@/context/CricketContext';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -7,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Camera, Download, RefreshCw, Trophy } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import * as htmlToImage from 'html-to-image';
+import { AppStep } from '@/types';
 
 const TeamResult: React.FC = () => {
   const { teamAlpha, teamBeta, tossWinningTeam, resetToStep } = useCricket();
@@ -45,7 +45,7 @@ const TeamResult: React.FC = () => {
   };
 
   const handleReset = () => {
-    resetToStep('add_players');
+    resetToStep(AppStep.ADD_PLAYERS);
   };
 
   return (

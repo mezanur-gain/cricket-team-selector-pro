@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import PlayerCard from './PlayerCard';
 import { Flag, Crown } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { AppStep } from '@/types';
 
 const CaptainSelection: React.FC = () => {
   const { teamAlpha, teamBeta, selectCaptain, setStep } = useCricket();
@@ -29,7 +30,7 @@ const CaptainSelection: React.FC = () => {
       return;
     }
 
-    setStep('toss');
+    setStep(AppStep.TOSS);
   };
 
   const areCaptainsSelected = !!teamAlpha.captain && !!teamBeta.captain;
