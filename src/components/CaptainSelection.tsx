@@ -4,7 +4,7 @@ import { useCricket } from '@/context/CricketContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import PlayerCard from './PlayerCard';
-import { Flag, Crown } from 'lucide-react';
+import { Flag, Crown, ChevronsRight, Coins } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { AppStep } from '@/types';
 
@@ -103,8 +103,9 @@ const CaptainSelection: React.FC = () => {
           disabled={!areCaptainsSelected}
           className="gap-2"
         >
-          <Crown className="h-4 w-4" />
-          <span>Proceed to Toss</span>
+          <Coins className="h-4 w-4" />
+          <span>Captains Selected - Proceed to Toss</span>
+          <ChevronsRight className="h-4 w-4" />
         </Button>
       </div>
     </div>

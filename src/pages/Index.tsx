@@ -12,9 +12,10 @@ import CoinToss from '@/components/CoinToss';
 import TeamResult from '@/components/TeamResult';
 import { AppStep } from '@/types';
 import { CircleOff } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const CricketTeamSelector: React.FC = () => {
-  const { step, movePlayerToTeam } = useCricket();
+  const { step, movePlayerToTeam, resetToStep } = useCricket();
 
   const handleDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
@@ -54,7 +55,21 @@ const CricketTeamSelector: React.FC = () => {
       case AppStep.TOSS:
         return <CoinToss />;
       case AppStep.RESULT:
-        return <TeamResult />;
+        return (
+          <div className="space-y-8">
+            <TeamResult />
+            <div className="flex justify-center">
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => resetToStep(AppStep.ADD_PLAYERS)}
+                className="gap-2"
+              >
+                Start New Game
+              </Button>
+            </div>
+          </div>
+        );
       default:
         return null;
     }

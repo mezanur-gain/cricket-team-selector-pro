@@ -1,18 +1,19 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useCricket } from '@/context/CricketContext';
-import { AlertCircle, Plus, User, UserPlus } from 'lucide-react';
+import { AlertCircle, Plus, User, UserPlus, ChevronsRight } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { AppStep } from '@/types';
 
 const AddPlayerForm: React.FC = () => {
   const [name, setName] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [weight, setWeight] = useState('');
-  const { addPlayer } = useCricket();
+  const { addPlayer, allPlayers, setStep } = useCricket();
   const { toast } = useToast();
 
   const handleAddPlayer = (e: React.FormEvent) => {
@@ -56,6 +57,18 @@ const AddPlayerForm: React.FC = () => {
       title: "Player Added",
       description: `${name} has been added to the player pool`,
     });
+  };
+
+  const handleProceedToTeams = () => {
+    if (allPlayers.length < 2) {
+      toast({
+        title: "Not Enough Players",
+        description: "You need at least 2 players to form teams",
+        variant: "destructive",
+      });
+      return;
+    }
+    setStep(AppStep.FORM_TEAMS);
   };
 
   return (
@@ -117,6 +130,17 @@ const AddPlayerForm: React.FC = () => {
           </Button>
         </form>
       </CardContent>
+      <CardFooter>
+        <Button 
+          variant="outline" 
+          className="w-full gap-2 mt-4"
+          onClick={handleProceedToTeams}
+          disabled={allPlayers.length < 2}
+        >
+          <span>Proceed to Form Teams</span>
+          <ChevronsRight className="h-4 w-4" />
+        </Button>
+      </CardFooter>
     </Card>
   );
 };
