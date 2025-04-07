@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -24,6 +25,10 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				cricket: {
+					pitch: '#8CAC5A',
+					leather: '#8B4513',
+				},
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
@@ -84,11 +89,21 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+				'coin-flip': {
+					'0%': { transform: 'rotateY(0)' },
+					'100%': { transform: 'rotateY(1080deg)' }
+				},
+				wiggle: {
+					'0%, 100%': { transform: 'rotate(-5deg)' },
+					'50%': { transform: 'rotate(5deg)' },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'coin-flip': 'coin-flip 3s ease-out forwards',
+				'wiggle': 'wiggle 1s ease-in-out infinite',
 			}
 		}
 	},
