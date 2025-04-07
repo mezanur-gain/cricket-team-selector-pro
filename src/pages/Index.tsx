@@ -11,7 +11,7 @@ import CaptainSelection from '@/components/CaptainSelection';
 import CoinToss from '@/components/CoinToss';
 import TeamResult from '@/components/TeamResult';
 import { AppStep } from '@/types';
-import { Ball } from 'lucide-react';
+import { CircleOff } from 'lucide-react';
 
 const CricketTeamSelector: React.FC = () => {
   const { step, movePlayerToTeam } = useCricket();
@@ -66,7 +66,7 @@ const CricketTeamSelector: React.FC = () => {
         <header className="mb-8">
           <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold flex items-center gap-2">
-              <Ball className="h-8 w-8" />
+              <CircleOff className="h-8 w-8" />
               <span>Cricket Team Selector Pro</span>
             </h1>
             <ThemeToggle />
