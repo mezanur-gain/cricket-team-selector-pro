@@ -3,6 +3,7 @@ import React from 'react';
 import { useCricket } from '@/context/CricketContext';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import PlayerCard from './PlayerCard';
 import { Flag, Users2, ShieldAlert } from 'lucide-react';
