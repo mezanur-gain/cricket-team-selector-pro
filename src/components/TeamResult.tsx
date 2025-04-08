@@ -61,7 +61,7 @@ const TeamResult: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      <div ref={resultRef} className="p-6 bg-card rounded-lg shadow-lg" data-testid="team-result-container">
+      <div ref={resultRef} className="p-6 bg-card rounded-lg shadow-lg">
         <div className="text-center mb-6">
           <h2 className="text-3xl font-bold">Cricket Team Selection Results</h2>
           <p className="text-muted-foreground">
