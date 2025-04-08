@@ -44,7 +44,7 @@ const CricketTeamSelector: React.FC = () => {
               <AddPlayerForm />
             </div>
             <div>
-              <PlayersList />
+              <PlayersList showDragHandle={false} />
             </div>
           </div>
         );
@@ -75,24 +75,34 @@ const CricketTeamSelector: React.FC = () => {
     }
   };
 
+  // Only wrap with DragDropContext when in the team formation or later steps
+  const content = renderStepContent();
+  const shouldEnableDragDrop = step === AppStep.FORM_TEAMS;
+
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <div className="container mx-auto px-4 py-8">
-        <header className="mb-8">
-          <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold flex items-center gap-2">
-              <CircleOff className="h-8 w-8" />
-              <span>Cricket Team Selector Pro</span>
-            </h1>
-            <ThemeToggle />
-          </div>
-        </header>
+    <div className="container mx-auto px-4 py-8">
+      <header className="mb-8">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold flex items-center gap-2">
+            <CircleOff className="h-8 w-8" />
+            <span>Cricket Team Selector Pro</span>
+          </h1>
+          <ThemeToggle />
+        </div>
+      </header>
 
-        <StepIndicator />
+      <StepIndicator />
 
-        <main>{renderStepContent()}</main>
-      </div>
-    </DragDropContext>
+      <main>
+        {shouldEnableDragDrop ? (
+          <DragDropContext onDragEnd={handleDragEnd}>
+            {content}
+          </DragDropContext>
+        ) : (
+          content
+        )}
+      </main>
+    </div>
   );
 };
 

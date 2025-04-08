@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useCricket } from '@/context/CricketContext';
 import PlayerCard from './PlayerCard';
@@ -6,7 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertCircle, Users } from 'lucide-react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
-const PlayersList: React.FC = () => {
+interface PlayersListProps {
+  showDragHandle?: boolean;
+}
+
+const PlayersList: React.FC<PlayersListProps> = ({ showDragHandle = true }) => {
   const { allPlayers, removePlayer } = useCricket();
 
   if (allPlayers.length === 0) {
@@ -21,6 +24,31 @@ const PlayersList: React.FC = () => {
         <CardContent className="flex flex-col items-center justify-center p-8 text-center text-muted-foreground">
           <AlertCircle className="h-12 w-12 mb-4 opacity-50" />
           <p>No players added yet. Use the form above to add players.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!showDragHandle) {
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Users className="h-5 w-5" />
+            <span>Player Pool ({allPlayers.length})</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="player-list">
+            {allPlayers.map((player) => (
+              <PlayerCard
+                key={player.id}
+                player={player}
+                onRemove={removePlayer}
+                isDraggable={false}
+              />
+            ))}
+          </div>
         </CardContent>
       </Card>
     );

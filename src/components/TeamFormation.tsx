@@ -9,6 +9,7 @@ import PlayerCard from './PlayerCard';
 import { Flag, Users2, ShieldAlert, Crown, ChevronsRight } from 'lucide-react';
 import { AppStep } from '@/types';
 import { useToast } from '@/components/ui/use-toast';
+import PlayersList from './PlayersList';
 
 const TeamFormation: React.FC = () => {
   const { 
@@ -41,6 +42,11 @@ const TeamFormation: React.FC = () => {
 
   return (
     <div className="space-y-8">
+      {/* Player Pool at the top */}
+      <div className="w-full">
+        <PlayersList showDragHandle={true} />
+      </div>
+      
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Team Alpha */}
         <Card>
