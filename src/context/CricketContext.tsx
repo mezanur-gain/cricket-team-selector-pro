@@ -1,7 +1,6 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { Player, Team, AppStep, TossResult } from '../types';
+import { Player, Team, AppStep, TossResult, CaptainTossChoice } from '../types';
 
 interface CricketContextType {
   step: AppStep;
@@ -19,6 +18,8 @@ interface CricketContextType {
   resetToStep: (step: AppStep) => void;
   isTeamFormationComplete: boolean;
   setIsTeamFormationComplete: (value: boolean) => void;
+  captainChoice: CaptainTossChoice | null;
+  setCaptainChoice: (choice: CaptainTossChoice) => void;
 }
 
 const CricketContext = createContext<CricketContextType | undefined>(undefined);
@@ -39,6 +40,7 @@ export const CricketProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [tossResult, setTossResult] = useState<TossResult>(null);
   const [tossWinningTeam, setTossWinningTeam] = useState<Team | null>(null);
   const [isTeamFormationComplete, setIsTeamFormationComplete] = useState(false);
+  const [captainChoice, setCaptainChoice] = useState<CaptainTossChoice | null>(null);
 
   const addPlayer = (player: Omit<Player, 'id'>) => {
     const newPlayer = {
@@ -51,7 +53,6 @@ export const CricketProvider: React.FC<{ children: ReactNode }> = ({ children })
   const removePlayer = (playerId: string) => {
     setAllPlayers((prev) => prev.filter((player) => player.id !== playerId));
     
-    // Also remove from teams if present
     setTeamAlpha((prev) => ({
       ...prev,
       players: prev.players.filter((player) => player.id !== playerId),
@@ -64,13 +65,11 @@ export const CricketProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   const movePlayerToTeam = (playerId: string, teamId: string) => {
-    // Find the player
     const player = [...allPlayers, ...teamAlpha.players, ...teamBeta.players]
       .find((p) => p.id === playerId);
     
     if (!player) return;
 
-    // Remove from source lists
     const updatedAllPlayers = allPlayers.filter((p) => p.id !== playerId);
     const updatedTeamAlpha = {
       ...teamAlpha,
@@ -81,14 +80,12 @@ export const CricketProvider: React.FC<{ children: ReactNode }> = ({ children })
       players: teamBeta.players.filter((p) => p.id !== playerId),
     };
 
-    // Add to destination team
     if (teamId === 'team-alpha') {
       updatedTeamAlpha.players.push(player);
     } else if (teamId === 'team-beta') {
       updatedTeamBeta.players.push(player);
     }
 
-    // Update state
     setAllPlayers(updatedAllPlayers);
     setTeamAlpha(updatedTeamAlpha);
     setTeamBeta(updatedTeamBeta);
@@ -98,26 +95,22 @@ export const CricketProvider: React.FC<{ children: ReactNode }> = ({ children })
     if (teamId === 'team-alpha') {
       const newTeam = {...teamAlpha};
       
-      // Reset any existing captain
       newTeam.players = newTeam.players.map(player => ({
         ...player,
         isCaptain: player.id === playerId
       }));
       
-      // Set the new captain reference
       newTeam.captain = newTeam.players.find(p => p.id === playerId);
       
       setTeamAlpha(newTeam);
     } else if (teamId === 'team-beta') {
       const newTeam = {...teamBeta};
       
-      // Reset any existing captain
       newTeam.players = newTeam.players.map(player => ({
         ...player,
         isCaptain: player.id === playerId
       }));
       
-      // Set the new captain reference
       newTeam.captain = newTeam.players.find(p => p.id === playerId);
       
       setTeamBeta(newTeam);
@@ -128,9 +121,16 @@ export const CricketProvider: React.FC<{ children: ReactNode }> = ({ children })
     const result: TossResult = Math.random() > 0.5 ? 'heads' : 'tails';
     setTossResult(result);
     
-    // Determine winning team (for simplicity, heads = Alpha, tails = Beta)
-    const winningTeam = result === 'heads' ? teamAlpha : teamBeta;
-    setTossWinningTeam(winningTeam);
+    if (captainChoice) {
+      const callingTeamId = captainChoice.teamId;
+      const callingChoice = captainChoice.choice;
+      
+      const winningTeamId = callingChoice === result ? callingTeamId : 
+        (callingTeamId === 'team-alpha' ? 'team-beta' : 'team-alpha');
+      
+      const winningTeam = winningTeamId === 'team-alpha' ? teamAlpha : teamBeta;
+      setTossWinningTeam(winningTeam);
+    }
   };
 
   const resetToStep = (targetStep: AppStep) => {
@@ -149,8 +149,8 @@ export const CricketProvider: React.FC<{ children: ReactNode }> = ({ children })
       setTossResult(null);
       setTossWinningTeam(null);
       setIsTeamFormationComplete(false);
+      setCaptainChoice(null);
     } else if (targetStep === AppStep.FORM_TEAMS) {
-      // Move all players back to the pool
       const allTeamPlayers = [...teamAlpha.players, ...teamBeta.players];
       setAllPlayers((prev) => [...prev, ...allTeamPlayers]);
       setTeamAlpha({
@@ -166,8 +166,8 @@ export const CricketProvider: React.FC<{ children: ReactNode }> = ({ children })
       setTossResult(null);
       setTossWinningTeam(null);
       setIsTeamFormationComplete(false);
+      setCaptainChoice(null);
     } else if (targetStep === AppStep.SELECT_CAPTAINS) {
-      // Reset captain selections
       setTeamAlpha({
         ...teamAlpha,
         players: teamAlpha.players.map(p => ({ ...p, isCaptain: false })),
@@ -180,9 +180,11 @@ export const CricketProvider: React.FC<{ children: ReactNode }> = ({ children })
       });
       setTossResult(null);
       setTossWinningTeam(null);
+      setCaptainChoice(null);
     } else if (targetStep === AppStep.TOSS) {
       setTossResult(null);
       setTossWinningTeam(null);
+      setCaptainChoice(null);
     }
     
     setStep(targetStep);
@@ -206,6 +208,8 @@ export const CricketProvider: React.FC<{ children: ReactNode }> = ({ children })
         resetToStep,
         isTeamFormationComplete,
         setIsTeamFormationComplete,
+        captainChoice,
+        setCaptainChoice,
       }}
     >
       {children}

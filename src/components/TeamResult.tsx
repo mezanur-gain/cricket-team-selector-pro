@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Camera, Download, RefreshCw, Trophy } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import * as htmlToImage from 'html-to-image';
+import { toPng } from 'html-to-image';
 import { AppStep } from '@/types';
 
 const TeamResult: React.FC = () => {
@@ -20,26 +20,37 @@ const TeamResult: React.FC = () => {
     setIsGenerating(true);
     
     try {
-      const dataUrl = await htmlToImage.toPng(resultRef.current);
-      
-      // Create a download link
-      const link = document.createElement('a');
-      link.download = 'cricket-teams-result.png';
-      link.href = dataUrl;
-      link.click();
-      
-      toast({
-        title: "Success",
-        description: "Image has been generated and downloaded",
-      });
+      setTimeout(async () => {
+        try {
+          const dataUrl = await toPng(resultRef.current!, { cacheBust: true });
+          
+          const link = document.createElement('a');
+          link.download = 'cricket-teams-result.png';
+          link.href = dataUrl;
+          link.click();
+          
+          toast({
+            title: "Success",
+            description: "Image has been generated and downloaded",
+          });
+        } catch (err) {
+          console.error("Error generating image:", err);
+          toast({
+            title: "Error",
+            description: "Failed to generate image. Please try again.",
+            variant: "destructive",
+          });
+        } finally {
+          setIsGenerating(false);
+        }
+      }, 100);
     } catch (error) {
-      console.error("Error generating image:", error);
+      console.error("Error preparing for image generation:", error);
       toast({
         title: "Error",
-        description: "Failed to generate image",
+        description: "Failed to prepare for image generation",
         variant: "destructive",
       });
-    } finally {
       setIsGenerating(false);
     }
   };
@@ -64,7 +75,6 @@ const TeamResult: React.FC = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Team Alpha */}
           <Card className={`border-2 ${tossWinningTeam?.id === 'team-alpha' ? 'border-primary' : 'border-transparent'}`}>
             <CardHeader className="bg-gradient-to-r from-blue-500/10 to-blue-600/5 relative">
               {tossWinningTeam?.id === 'team-alpha' && (
@@ -117,7 +127,6 @@ const TeamResult: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Team Beta */}
           <Card className={`border-2 ${tossWinningTeam?.id === 'team-beta' ? 'border-primary' : 'border-transparent'}`}>
             <CardHeader className="bg-gradient-to-r from-amber-500/10 to-amber-600/5 relative">
               {tossWinningTeam?.id === 'team-beta' && (

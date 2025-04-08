@@ -23,3 +23,8 @@ export enum AppStep {
 }
 
 export type TossResult = 'heads' | 'tails' | null;
+
+export interface CaptainTossChoice {
+  choice: 'heads' | 'tails';
+  teamId: string;
+}

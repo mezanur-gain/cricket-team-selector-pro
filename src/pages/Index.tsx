@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { CricketProvider, useCricket } from '@/context/CricketContext';
@@ -13,6 +12,12 @@ import TeamResult from '@/components/TeamResult';
 import { AppStep } from '@/types';
 import { CircleOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
+// Add Montserrat font
+import '@fontsource/montserrat/400.css';
+import '@fontsource/montserrat/500.css';
+import '@fontsource/montserrat/600.css';
+import '@fontsource/montserrat/700.css';
 
 const CricketTeamSelector: React.FC = () => {
   const { step, movePlayerToTeam, resetToStep } = useCricket();
@@ -80,7 +85,7 @@ const CricketTeamSelector: React.FC = () => {
   const shouldEnableDragDrop = step === AppStep.FORM_TEAMS;
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 font-montserrat">
       <header className="mb-8">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold flex items-center gap-2">
