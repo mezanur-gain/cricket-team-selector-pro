@@ -177,12 +177,16 @@ const CoinToss: React.FC = () => {
           </div>
 
           <div className="perspective-[1000px] mb-8">
-            <div className={`coin ${isFlipping ? 'animate-coin-flip' : ''}`}>
+            <div className={`coin ${isFlipping ? 'animate-coin-flip' : ''}`} style={{ transformStyle: 'preserve-3d' }}>
               <div className="coin-side heads">
-                <span className="text-2xl font-bold">H</span>
+                <div className="flex items-center justify-center">
+                  <CircleDot className="h-10 w-10 text-primary-foreground" />
+                </div>
               </div>
               <div className="coin-side tails">
-                <span className="text-2xl font-bold">T</span>
+                <div className="flex items-center justify-center">
+                  <CircleOff className="h-10 w-10 text-primary-foreground" />
+                </div>
               </div>
             </div>
           </div>
@@ -190,8 +194,15 @@ const CoinToss: React.FC = () => {
           {tossResult && !isFlipping && (
             <div className="mb-6 p-4 bg-primary/10 rounded-lg">
               <div className="text-xl font-medium">Result: {tossResult.toUpperCase()}</div>
-              <div className="mt-2 text-lg">
-                <span className="font-semibold">{tossWinningTeam?.name}</span> wins the toss!
+              <div className="flex items-center justify-center mt-2 gap-2">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ 
+                  background: tossResult === 'heads' ? 'linear-gradient(45deg, #f5d742, #f5b642)' : 'linear-gradient(45deg, #427af5, #425df5)' 
+                }}>
+                  {tossResult === 'heads' ? <CircleDot className="h-6 w-6 text-primary-foreground" /> : <CircleOff className="h-6 w-6 text-primary-foreground" />}
+                </div>
+                <div className="text-lg">
+                  <span className="font-semibold">{tossWinningTeam?.name}</span> wins the toss!
+                </div>
               </div>
             </div>
           )}
