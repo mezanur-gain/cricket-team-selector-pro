@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { CricketProvider, useCricket } from '@/context/CricketContext';
@@ -9,9 +10,11 @@ import TeamFormation from '@/components/TeamFormation';
 import CaptainSelection from '@/components/CaptainSelection';
 import CoinToss from '@/components/CoinToss';
 import TeamResult from '@/components/TeamResult';
+import AutomationScheduler from '@/components/AutomationScheduler';
 import { AppStep } from '@/types';
-import { CircleOff } from 'lucide-react';
+import { CircleOff, Settings, CircleAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // Add Montserrat font
 import '@fontsource/montserrat/400.css';
@@ -92,21 +95,58 @@ const CricketTeamSelector: React.FC = () => {
             <CircleOff className="h-8 w-8" />
             <span>Cricket Team Selector Pro</span>
           </h1>
-          <ThemeToggle />
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
-      <StepIndicator />
-
-      <main>
-        {shouldEnableDragDrop ? (
-          <DragDropContext onDragEnd={handleDragEnd}>
-            {content}
-          </DragDropContext>
-        ) : (
-          content
-        )}
-      </main>
+      <Tabs defaultValue="main">
+        <TabsList className="mb-6">
+          <TabsTrigger value="main" className="flex items-center gap-2">
+            <CircleOff className="h-4 w-4" />
+            <span>Team Selector</span>
+          </TabsTrigger>
+          <TabsTrigger value="automation" className="flex items-center gap-2">
+            <Settings className="h-4 w-4" />
+            <span>Automation</span>
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="main">
+          <div className="space-y-8">
+            <StepIndicator />
+            
+            <main>
+              {shouldEnableDragDrop ? (
+                <DragDropContext onDragEnd={handleDragEnd}>
+                  {content}
+                </DragDropContext>
+              ) : (
+                content
+              )}
+            </main>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="automation">
+          <div className="max-w-2xl mx-auto">
+            <div className="mb-6 p-4 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-start gap-3">
+              <CircleAlert className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+              <div>
+                <h3 className="font-medium">About Automated Team Formation</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  This feature automatically creates balanced teams based on player weights,
+                  selects captains, performs the coin toss, and downloads the result image at a scheduled time.
+                  If no players are present, it will add default cricket players.
+                </p>
+              </div>
+            </div>
+            
+            <AutomationScheduler />
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
