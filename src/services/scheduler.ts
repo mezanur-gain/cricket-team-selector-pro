@@ -1,6 +1,6 @@
 
-import { CricketContextType } from "@/context/CricketContext";
-import { Player, AppStep } from "@/types";
+import { Player, Team, AppStep } from "@/types";
+import { useCricket } from "@/context/CricketContext";
 
 export interface ScheduleConfig {
   hour: number;
@@ -10,7 +10,7 @@ export interface ScheduleConfig {
 
 export const scheduleAutoTeamFormation = (
   config: ScheduleConfig,
-  cricketContext: CricketContextType,
+  cricketContext: ReturnType<typeof useCricket>,
   onComplete: () => void
 ): (() => void) => {
   let timeoutId: number | null = null;
@@ -216,7 +216,7 @@ export const defaultPlayers: Omit<Player, 'id'>[] = [
 ];
 
 // Create balanced teams based on player weights
-export const formBalancedTeams = (cricketContext: CricketContextType) => {
+export const formBalancedTeams = (cricketContext: ReturnType<typeof useCricket>) => {
   const { allPlayers, movePlayerToTeam } = cricketContext;
   
   // Sort players by weight in descending order
@@ -254,7 +254,7 @@ export const formBalancedTeams = (cricketContext: CricketContextType) => {
 };
 
 // Select random captains for both teams
-export const selectRandomCaptains = (cricketContext: CricketContextType) => {
+export const selectRandomCaptains = (cricketContext: ReturnType<typeof useCricket>) => {
   const { teamAlpha, teamBeta, selectCaptain } = cricketContext;
   
   // Select random captain for Team Alpha

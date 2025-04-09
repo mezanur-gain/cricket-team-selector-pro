@@ -1,8 +1,9 @@
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Player, Team, AppStep, TossResult, CaptainTossChoice } from '../types';
 
-interface CricketContextType {
+export interface CricketContextType {
   step: AppStep;
   setStep: (step: AppStep) => void;
   allPlayers: Player[];

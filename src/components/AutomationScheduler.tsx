@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { Clock, RefreshCw, Users2 } from 'lucide-react';
 import { scheduleAutoTeamFormation, ScheduleConfig } from '@/services/scheduler';
 import { Separator } from '@/components/ui/separator';
