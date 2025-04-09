@@ -37,6 +37,8 @@ const CricketTeamSelector: React.FC = () => {
   useEffect(() => {
     // If there are no players, load the default players
     if (allPlayers.length === 0) {
+      console.log("Loading default players on app start");
+      
       // Remove any existing players to avoid duplicates
       allPlayers.forEach(player => {
         removePlayer(player.id);

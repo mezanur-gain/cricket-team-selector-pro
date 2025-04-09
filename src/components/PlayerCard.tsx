@@ -4,7 +4,8 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Player } from '@/types';
-import { Trash2, Crown } from 'lucide-react';
+import { Trash2, Crown, Star } from 'lucide-react';
+import { useCricket } from '@/context/CricketContext';
 
 interface PlayerCardProps {
   player: Player;
@@ -21,6 +22,26 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
   isCaptainSelectionMode = false,
   onSelectCaptain,
 }) => {
+  const { step } = useCricket();
+  
+  // Generate a player skill description based on weight
+  const getPlayerSkillDescription = (weight: number) => {
+    switch (weight) {
+      case 1:
+        return "Beginner";
+      case 2:
+        return "Amateur";
+      case 3:
+        return "Intermediate";
+      case 4:
+        return "Advanced";
+      case 5:
+        return "Expert";
+      default:
+        return "Player";
+    }
+  };
+
   return (
     <Card className={`player-card ${isDraggable ? 'cursor-grab' : ''}`}>
       <CardHeader className="p-3 pb-0 relative flex-row justify-between">
@@ -44,8 +65,20 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
           />
         </div>
         <div className="flex justify-between items-center text-sm">
-          <span>Weight:</span>
-          <Badge variant="outline">{player.weight} kg</Badge>
+          {step === 'result' ? (
+            <>
+              <span>Skill:</span>
+              <Badge variant="outline" className="flex items-center gap-1">
+                <Star className="h-3 w-3" />
+                {getPlayerSkillDescription(player.weight)}
+              </Badge>
+            </>
+          ) : (
+            <>
+              <span>Weight:</span>
+              <Badge variant="outline">{player.weight}</Badge>
+            </>
+          )}
         </div>
       </CardContent>
       <CardFooter className="p-3 pt-0">

@@ -6,11 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import PlayerCard from './PlayerCard';
-import { Flag, Users2, ShieldAlert, Crown, ChevronsRight, Scale } from 'lucide-react';
+import { Flag, Users2, ShieldAlert, Crown, ChevronsRight, Scale, Shuffle } from 'lucide-react';
 import { AppStep } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import PlayersList from './PlayersList';
 import { formBalancedTeams } from '@/services/scheduler';
+import { defaultPlayers } from '@/services/scheduler';
 
 const TeamFormation: React.FC = () => {
   const { 
@@ -19,7 +20,10 @@ const TeamFormation: React.FC = () => {
     setStep, 
     isTeamFormationComplete, 
     setIsTeamFormationComplete,
-    allPlayers
+    allPlayers,
+    addPlayer,
+    removePlayer,
+    resetToStep
   } = useCricket();
   const { toast } = useToast();
 
@@ -51,6 +55,36 @@ const TeamFormation: React.FC = () => {
     formBalancedTeams(useCricket());
   };
 
+  const handleGetRandomBalancedTeam = () => {
+    toast({
+      title: "Creating Random Balanced Teams",
+      description: "Generating two equally balanced teams from default players"
+    });
+    
+    // First reset to clean state
+    resetToStep(AppStep.FORM_TEAMS);
+    
+    // Clear any existing players to avoid duplicates
+    allPlayers.forEach(player => {
+      removePlayer(player.id);
+    });
+    
+    // Add default players
+    defaultPlayers.forEach(player => {
+      const playerWithoutId = {
+        name: player.name,
+        imageUrl: player.imageUrl,
+        weight: player.weight
+      };
+      addPlayer(playerWithoutId);
+    });
+    
+    // Short timeout to ensure state is updated before forming teams
+    setTimeout(() => {
+      formBalancedTeams(useCricket());
+    }, 100);
+  };
+
   // Calculate team total weights
   const calculateTeamWeight = (players) => {
     return players.reduce((sum, player) => sum + player.weight, 0);
@@ -66,8 +100,8 @@ const TeamFormation: React.FC = () => {
         <PlayersList showDragHandle={true} />
       </div>
       
-      {/* Auto-balance Button */}
-      <div className="flex justify-center">
+      {/* Quick Action Buttons */}
+      <div className="flex justify-center gap-4 flex-wrap">
         <Button 
           variant="outline" 
           onClick={handleAutoFormTeams}
@@ -76,6 +110,15 @@ const TeamFormation: React.FC = () => {
         >
           <Scale className="h-4 w-4" />
           <span>Auto-Balance Teams</span>
+        </Button>
+        
+        <Button 
+          variant="default" 
+          onClick={handleGetRandomBalancedTeam}
+          className="gap-2"
+        >
+          <Shuffle className="h-4 w-4" />
+          <span>Get Random Balanced Team</span>
         </Button>
       </div>
       
