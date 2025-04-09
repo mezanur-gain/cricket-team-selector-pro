@@ -1,7 +1,7 @@
-
 import React, { useEffect } from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
-import { CricketProvider, useCricket } from '@/context/CricketContext';
+import { CricketProvider } from '@/context/CricketContext';
+import { useCricket } from '@/context/useCricket';
 import ThemeToggle from '@/components/ThemeToggle';
 import StepIndicator from '@/components/StepIndicator';
 import AddPlayerForm from '@/components/AddPlayerForm';

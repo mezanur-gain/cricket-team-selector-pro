@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { useCricket } from '@/context/CricketContext';
+import { useCricket } from '@/context/useCricket';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,7 +20,6 @@ const AutomationScheduler: React.FC = () => {
     enabled: false
   });
   
-  // Load config from localStorage
   useEffect(() => {
     const savedConfig = localStorage.getItem('automationConfig');
     if (savedConfig) {
@@ -33,15 +31,12 @@ const AutomationScheduler: React.FC = () => {
     }
   }, []);
   
-  // Save config to localStorage
   useEffect(() => {
     localStorage.setItem('automationConfig', JSON.stringify(config));
   }, [config]);
   
-  // Set up scheduler
   useEffect(() => {
     const handleCaptureImage = () => {
-      // Find the result container
       const resultElement = document.querySelector("[data-testid='team-result-container']");
       if (!resultElement) {
         console.error("Team result container not found");
@@ -101,7 +96,6 @@ const AutomationScheduler: React.FC = () => {
       0
     );
     
-    // If the target time has already passed today, schedule for tomorrow
     if (targetTime.getTime() <= now.getTime()) {
       targetTime.setDate(targetTime.getDate() + 1);
     }
@@ -115,7 +109,6 @@ const AutomationScheduler: React.FC = () => {
       description: "Teams will be formed, captains selected, and toss performed automatically.",
     });
     
-    // Trigger the automation process manually
     const cleanup = scheduleAutoTeamFormation(
       { ...config, hour: new Date().getHours(), minute: new Date().getMinutes() + 1, enabled: true },
       cricket,
@@ -125,10 +118,9 @@ const AutomationScheduler: React.FC = () => {
           description: "Teams formed, captains selected, and image downloaded successfully!",
         });
       },
-      true // Force immediate execution
+      true
     );
     
-    // Clean up the temporary scheduler after 2 minutes
     setTimeout(cleanup, 120000);
   };
   

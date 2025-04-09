@@ -1,6 +1,5 @@
-
 import React, { useEffect } from 'react';
-import { useCricket } from '@/context/CricketContext';
+import { useCricket } from '@/context/useCricket';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

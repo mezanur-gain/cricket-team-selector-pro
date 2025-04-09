@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCricket } from '@/context/CricketContext';
+import { useCricket } from '@/context/useCricket';
 import PlayerCard from './PlayerCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertCircle, Users } from 'lucide-react';

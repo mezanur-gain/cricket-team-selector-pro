@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Player } from '@/types';
 import { Trash2, Crown, Star } from 'lucide-react';
-import { useCricket } from '@/context/CricketContext';
+import { useCricket } from '@/context/useCricket';
 
 interface PlayerCardProps {
   player: Player;
@@ -24,7 +23,6 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
 }) => {
   const { step } = useCricket();
   
-  // Generate a player skill description based on weight
   const getPlayerSkillDescription = (weight: number) => {
     switch (weight) {
       case 1:
