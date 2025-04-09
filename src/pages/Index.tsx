@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { CricketProvider, useCricket } from '@/context/CricketContext';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -15,6 +15,7 @@ import { AppStep } from '@/types';
 import { CircleOff, Settings, CircleAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { defaultPlayers } from '@/services/scheduler';
 
 // Add Montserrat font
 import '@fontsource/montserrat/400.css';
@@ -23,7 +24,35 @@ import '@fontsource/montserrat/600.css';
 import '@fontsource/montserrat/700.css';
 
 const CricketTeamSelector: React.FC = () => {
-  const { step, movePlayerToTeam, resetToStep } = useCricket();
+  const { 
+    step, 
+    movePlayerToTeam, 
+    resetToStep, 
+    allPlayers, 
+    addPlayer,
+    removePlayer
+  } = useCricket();
+
+  // Load default players when the app starts if no players exist
+  useEffect(() => {
+    // If there are no players, load the default players
+    if (allPlayers.length === 0) {
+      // Remove any existing players to avoid duplicates
+      allPlayers.forEach(player => {
+        removePlayer(player.id);
+      });
+      
+      // Add default players
+      defaultPlayers.forEach(player => {
+        const playerWithoutId = {
+          name: player.name,
+          imageUrl: player.imageUrl,
+          weight: player.weight
+        };
+        addPlayer(playerWithoutId);
+      });
+    }
+  }, []);
 
   const handleDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
@@ -138,7 +167,7 @@ const CricketTeamSelector: React.FC = () => {
                 <p className="text-sm text-muted-foreground mt-1">
                   This feature automatically creates balanced teams based on player weights,
                   selects captains, performs the coin toss, and downloads the result image at a scheduled time.
-                  If no players are present, it will add default cricket players.
+                  Default cricket players are always loaded into the system.
                 </p>
               </div>
             </div>

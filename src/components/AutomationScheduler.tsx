@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useCricket } from '@/context/CricketContext';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -123,7 +124,8 @@ const AutomationScheduler: React.FC = () => {
           title: "Automated Process Complete",
           description: "Teams formed, captains selected, and image downloaded successfully!",
         });
-      }
+      },
+      true // Force immediate execution
     );
     
     // Clean up the temporary scheduler after 2 minutes

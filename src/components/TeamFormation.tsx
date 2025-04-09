@@ -1,15 +1,16 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useCricket } from '@/context/CricketContext';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import PlayerCard from './PlayerCard';
-import { Flag, Users2, ShieldAlert, Crown, ChevronsRight } from 'lucide-react';
+import { Flag, Users2, ShieldAlert, Crown, ChevronsRight, Scale } from 'lucide-react';
 import { AppStep } from '@/types';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import PlayersList from './PlayersList';
+import { formBalancedTeams } from '@/services/scheduler';
 
 const TeamFormation: React.FC = () => {
   const { 
@@ -17,7 +18,8 @@ const TeamFormation: React.FC = () => {
     teamBeta, 
     setStep, 
     isTeamFormationComplete, 
-    setIsTeamFormationComplete 
+    setIsTeamFormationComplete,
+    allPlayers
   } = useCricket();
   const { toast } = useToast();
 
@@ -40,11 +42,41 @@ const TeamFormation: React.FC = () => {
     return teamAlpha.players.length >= 1 && teamBeta.players.length >= 1;
   };
 
+  const handleAutoFormTeams = () => {
+    toast({
+      title: "Auto-forming Teams",
+      description: "Creating balanced teams based on player weights"
+    });
+    
+    formBalancedTeams(useCricket());
+  };
+
+  // Calculate team total weights
+  const calculateTeamWeight = (players) => {
+    return players.reduce((sum, player) => sum + player.weight, 0);
+  };
+
+  const teamAlphaWeight = calculateTeamWeight(teamAlpha.players);
+  const teamBetaWeight = calculateTeamWeight(teamBeta.players);
+
   return (
     <div className="space-y-8">
       {/* Player Pool at the top */}
       <div className="w-full">
         <PlayersList showDragHandle={true} />
+      </div>
+      
+      {/* Auto-balance Button */}
+      <div className="flex justify-center">
+        <Button 
+          variant="outline" 
+          onClick={handleAutoFormTeams}
+          className="gap-2"
+          disabled={allPlayers.length === 0 && teamAlpha.players.length === 0 && teamBeta.players.length === 0}
+        >
+          <Scale className="h-4 w-4" />
+          <span>Auto-Balance Teams</span>
+        </Button>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -55,6 +87,9 @@ const TeamFormation: React.FC = () => {
               <Flag className="h-5 w-5 text-blue-500" />
               <span>Team Alpha</span>
               <Badge>{teamAlpha.players.length}</Badge>
+              {teamAlpha.players.length > 0 && (
+                <Badge variant="outline" className="ml-auto">Weight: {teamAlphaWeight}</Badge>
+              )}
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4">
@@ -63,7 +98,7 @@ const TeamFormation: React.FC = () => {
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  className={`team-container ${
+                  className={`team-container min-h-[200px] ${
                     snapshot.isDraggingOver ? 'bg-blue-500/10' : ''
                   }`}
                 >
@@ -108,6 +143,9 @@ const TeamFormation: React.FC = () => {
               <Flag className="h-5 w-5 text-amber-500" />
               <span>Team Beta</span>
               <Badge>{teamBeta.players.length}</Badge>
+              {teamBeta.players.length > 0 && (
+                <Badge variant="outline" className="ml-auto">Weight: {teamBetaWeight}</Badge>
+              )}
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4">
@@ -116,7 +154,7 @@ const TeamFormation: React.FC = () => {
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  className={`team-container ${
+                  className={`team-container min-h-[200px] ${
                     snapshot.isDraggingOver ? 'bg-amber-500/10' : ''
                   }`}
                 >
@@ -154,6 +192,20 @@ const TeamFormation: React.FC = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Weight Comparison */}
+      {(teamAlpha.players.length > 0 || teamBeta.players.length > 0) && (
+        <div className="text-center p-2 bg-muted rounded-lg text-sm">
+          <div className="font-medium mb-1">Team Weight Balance:</div>
+          <div className="flex justify-center items-center gap-4">
+            <span>Team Alpha: {teamAlphaWeight}</span>
+            <span className={teamAlphaWeight === teamBetaWeight ? "text-green-500" : "text-amber-500"}>
+              {teamAlphaWeight === teamBetaWeight ? "=" : teamAlphaWeight > teamBetaWeight ? ">" : "<"}
+            </span>
+            <span>Team Beta: {teamBetaWeight}</span>
+          </div>
+        </div>
+      )}
 
       {/* Proceed Button */}
       <div className="flex justify-center mt-8">
