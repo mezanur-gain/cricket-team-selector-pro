@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useCricket } from '@/context/CricketContext';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -45,6 +44,11 @@ const AutomationScheduler: React.FC = () => {
       const resultElement = document.querySelector("[data-testid='team-result-container']");
       if (!resultElement) {
         console.error("Team result container not found");
+        toast({
+          title: "Error",
+          description: "Could not find team result container for image capture",
+          variant: "destructive",
+        });
         return;
       }
       
@@ -69,7 +73,7 @@ const AutomationScheduler: React.FC = () => {
             variant: "destructive",
           });
         }
-      }, 500);
+      }, 1000);
     };
     
     const cleanup = scheduleAutoTeamFormation(config, cricket, handleCaptureImage);
@@ -105,15 +109,6 @@ const AutomationScheduler: React.FC = () => {
   };
   
   const handleRunNow = async () => {
-    if (!config.enabled) {
-      toast({
-        title: "Automation Disabled",
-        description: "Please enable automation before running the process.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
     toast({
       title: "Starting Automated Process",
       description: "Teams will be formed, captains selected, and toss performed automatically.",
@@ -121,7 +116,7 @@ const AutomationScheduler: React.FC = () => {
     
     // Trigger the automation process manually
     const cleanup = scheduleAutoTeamFormation(
-      { ...config, hour: new Date().getHours(), minute: new Date().getMinutes() + 1 },
+      { ...config, hour: new Date().getHours(), minute: new Date().getMinutes() + 1, enabled: true },
       cricket,
       () => {
         toast({
