@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useCricket } from '@/context/CricketContext';
+import { useCricket } from '@/context/useCricket';
 import { AppStep } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Check, UserPlus, Users2, Crown, Coins, Trophy } from 'lucide-react';

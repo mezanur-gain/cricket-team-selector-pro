@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useCricket } from '@/context/CricketContext';
+import { useCricket } from '@/context/useCricket';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Crown, ChevronsRight, Trophy, CircleDot, CircleOff } from 'lucide-react';

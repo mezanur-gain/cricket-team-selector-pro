@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useCricket } from '@/context/CricketContext';
+import { useCricket } from '@/context/useCricket';
 import { AlertCircle, Plus, User, UserPlus, ChevronsRight } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { AppStep } from '@/types';

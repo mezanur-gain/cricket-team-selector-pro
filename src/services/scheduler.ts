@@ -1,6 +1,5 @@
-
 import { Player, Team, AppStep } from "@/types";
-import { useCricket } from "@/context/CricketContext";
+import { useCricket } from "@/context/useCricket";
 
 export interface ScheduleConfig {
   hour: number;
