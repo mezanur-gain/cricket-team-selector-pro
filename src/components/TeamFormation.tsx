@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+
+import React from 'react';
 import { useCricket } from '@/context/useCricket';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,8 +10,52 @@ import { Flag, Users2, ShieldAlert, Crown, ChevronsRight, Scale, Shuffle } from 
 import { AppStep } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import PlayersList from './PlayersList';
-import { formBalancedTeams } from '@/services/scheduler';
-import { defaultPlayers } from '@/services/scheduler';
+
+// Default players for random team generation
+const defaultPlayers = [
+  { name: "MS Dhoni", imageUrl: "/placeholder.svg", weight: 9 },
+  { name: "Virat Kohli", imageUrl: "/placeholder.svg", weight: 9 },
+  { name: "Rohit Sharma", imageUrl: "/placeholder.svg", weight: 8 },
+  { name: "Jasprit Bumrah", imageUrl: "/placeholder.svg", weight: 8 },
+  { name: "KL Rahul", imageUrl: "/placeholder.svg", weight: 7 },
+  { name: "Ravindra Jadeja", imageUrl: "/placeholder.svg", weight: 7 },
+  { name: "Hardik Pandya", imageUrl: "/placeholder.svg", weight: 7 },
+  { name: "Bhuvneshwar Kumar", imageUrl: "/placeholder.svg", weight: 6 },
+  { name: "Yuzvendra Chahal", imageUrl: "/placeholder.svg", weight: 6 },
+  { name: "Shikhar Dhawan", imageUrl: "/placeholder.svg", weight: 6 },
+  { name: "Rishabh Pant", imageUrl: "/placeholder.svg", weight: 5 },
+  { name: "Shreyas Iyer", imageUrl: "/placeholder.svg", weight: 5 },
+];
+
+// Function to create balanced teams
+const formBalancedTeams = (cricketContext) => {
+  const {
+    allPlayers,
+    movePlayerToTeam,
+    resetToStep
+  } = cricketContext;
+
+  // First clear any existing team assignments
+  resetToStep(AppStep.FORM_TEAMS);
+  
+  // Sort players by weight in descending order
+  const sortedPlayers = [...allPlayers].sort((a, b) => b.weight - a.weight);
+  
+  // Initialize team weights
+  let teamAlphaWeight = 0;
+  let teamBetaWeight = 0;
+  
+  // Distribute players using a greedy algorithm
+  sortedPlayers.forEach(player => {
+    if (teamAlphaWeight <= teamBetaWeight) {
+      movePlayerToTeam(player.id, 'team-alpha');
+      teamAlphaWeight += player.weight;
+    } else {
+      movePlayerToTeam(player.id, 'team-beta');
+      teamBetaWeight += player.weight;
+    }
+  });
+};
 
 const TeamFormation: React.FC = () => {
   const { 
@@ -105,7 +150,7 @@ const TeamFormation: React.FC = () => {
           variant="outline" 
           onClick={handleAutoFormTeams}
           className="gap-2"
-          disabled={allPlayers.length === 0 && teamAlpha.players.length === 0 && teamBeta.players.length === 0}
+          disabled={allPlayers.length === 0}
         >
           <Scale className="h-4 w-4" />
           <span>Auto-Balance Teams</span>
@@ -117,7 +162,7 @@ const TeamFormation: React.FC = () => {
           className="gap-2"
         >
           <Shuffle className="h-4 w-4" />
-          <span>Get Random Balanced Team</span>
+          <span>Generate Random Balanced Teams</span>
         </Button>
       </div>
       

@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { CricketProvider } from '@/context/CricketContext';
@@ -10,12 +11,9 @@ import TeamFormation from '@/components/TeamFormation';
 import CaptainSelection from '@/components/CaptainSelection';
 import CoinToss from '@/components/CoinToss';
 import TeamResult from '@/components/TeamResult';
-import AutomationScheduler from '@/components/AutomationScheduler';
 import { AppStep } from '@/types';
-import { CircleOff, Settings, CircleAlert } from 'lucide-react';
+import { CircleOff, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { defaultPlayers } from '@/services/scheduler';
 
 // Add Montserrat font
 import '@fontsource/montserrat/400.css';
@@ -27,34 +25,8 @@ const CricketTeamSelector: React.FC = () => {
   const { 
     step, 
     movePlayerToTeam, 
-    resetToStep, 
-    allPlayers, 
-    addPlayer,
-    removePlayer
+    resetToStep
   } = useCricket();
-
-  // Load default players when the app starts if no players exist
-  useEffect(() => {
-    // If there are no players, load the default players
-    if (allPlayers.length === 0) {
-      console.log("Loading default players on app start");
-      
-      // Remove any existing players to avoid duplicates
-      allPlayers.forEach(player => {
-        removePlayer(player.id);
-      });
-      
-      // Add default players
-      defaultPlayers.forEach(player => {
-        const playerWithoutId = {
-          name: player.name,
-          imageUrl: player.imageUrl,
-          weight: player.weight
-        };
-        addPlayer(playerWithoutId);
-      });
-    }
-  }, []);
 
   const handleDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
@@ -132,52 +104,19 @@ const CricketTeamSelector: React.FC = () => {
         </div>
       </header>
 
-      <Tabs defaultValue="main">
-        <TabsList className="mb-6">
-          <TabsTrigger value="main" className="flex items-center gap-2">
-            <CircleOff className="h-4 w-4" />
-            <span>Team Selector</span>
-          </TabsTrigger>
-          <TabsTrigger value="automation" className="flex items-center gap-2">
-            <Settings className="h-4 w-4" />
-            <span>Automation</span>
-          </TabsTrigger>
-        </TabsList>
+      <div className="space-y-8">
+        <StepIndicator />
         
-        <TabsContent value="main">
-          <div className="space-y-8">
-            <StepIndicator />
-            
-            <main>
-              {shouldEnableDragDrop ? (
-                <DragDropContext onDragEnd={handleDragEnd}>
-                  {content}
-                </DragDropContext>
-              ) : (
-                content
-              )}
-            </main>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="automation">
-          <div className="max-w-2xl mx-auto">
-            <div className="mb-6 p-4 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-start gap-3">
-              <CircleAlert className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
-              <div>
-                <h3 className="font-medium">About Automated Team Formation</h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  This feature automatically creates balanced teams based on player weights,
-                  selects captains, performs the coin toss, and downloads the result image at a scheduled time.
-                  Default cricket players are always loaded into the system.
-                </p>
-              </div>
-            </div>
-            
-            <AutomationScheduler />
-          </div>
-        </TabsContent>
-      </Tabs>
+        <main>
+          {shouldEnableDragDrop ? (
+            <DragDropContext onDragEnd={handleDragEnd}>
+              {content}
+            </DragDropContext>
+          ) : (
+            content
+          )}
+        </main>
+      </div>
     </div>
   );
 };
